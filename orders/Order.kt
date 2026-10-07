@@ -8,12 +8,10 @@ import users.User
 
 private fun money(value: Double): String = "%.2f руб.".format(value)
 
-/** Заказ. Состояние скрыто (private), менять его можно только методами. */
 class Order(val id: Int, val customer: User) {
 
     private val _items = mutableListOf<OrderItem>()
 
-    // Наружу отдаём копию списка, чтобы его нельзя было испортить
     val items: List<OrderItem>
         get() = _items.toList()
 
@@ -56,7 +54,6 @@ class Order(val id: Int, val customer: User) {
 
     fun cancel(): OperationResult = moveTo(OrderStatus.CANCELLED)
 
-    /** Единственное место, где меняется статус, с проверкой допустимости перехода. */
     private fun moveTo(next: OrderStatus): OperationResult {
         if (!status.canTransitionTo(next)) {
             return OperationResult.Failure("Переход «${status.title}» → «${next.title}» невозможен")
