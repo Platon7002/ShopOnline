@@ -1,9 +1,5 @@
 package models
 
-/**
- * Статусы заказа (enum) и допустимые переходы между ними:
- * NEW -> PAID -> SHIPPED -> DELIVERED, а отменить можно только NEW или PAID.
- */
 enum class OrderStatus(val title: String) {
     NEW("Новый"),
     PAID("Оплачен"),
