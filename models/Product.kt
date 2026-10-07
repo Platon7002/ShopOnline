@@ -1,6 +1,5 @@
 package models
 
-/** Товар (data class: готовые toString, equals, copy). */
 data class Product(
     val id: Int,
     val name: String,
