@@ -11,7 +11,6 @@ import users.Customer
 import users.PremiumCustomer
 import users.User
 
-/** Печатает результат операции. when по sealed-классу без else. */
 fun printResult(result: OperationResult) {
     val text = when (result) {
         is OperationResult.Success -> "[OK] ${result.message}"
@@ -27,7 +26,6 @@ fun printTitle(title: String) {
 }
 
 fun main() {
-    // ---------- 1. data class и enum ----------
     printTitle("1. Каталог (data class, enum)")
     val laptop = Product(1, "Ноутбук", 80000.0, Category.ELECTRONICS)
     val book = Product(2, "Книга по Kotlin", 500.0, Category.BOOKS)
@@ -48,7 +46,6 @@ fun main() {
         println("Некорректный товар не создан: ${e.message}")
     }
 
-    // ---------- 2. Наследование, интерфейсы, полиморфизм ----------
     printTitle("2. Пользователи (наследование, полиморфизм)")
     val anna = Customer(1, "Анна", "anna@mail.ru")
     val boris = PremiumCustomer(2, "Борис", "boris@mail.ru")
@@ -56,41 +53,38 @@ fun main() {
 
     val users: List<User> = listOf(anna, boris, admin)
     for (user in users) {
-        println(user.describe())          // у каждого класса своя версия describe()
+        println(user.describe())       
     }
     println("Смена email Анны на неверный: ${anna.changeEmail("не-почта")}")
     println("Смена email Анны на верный: ${anna.changeEmail("anna@gmail.com")}, теперь ${anna.email}")
 
-    // ---------- 3. Жизненный цикл заказа ----------
     printTitle("3. Заказ Анны: полный путь")
     val service = OrderService()
     val order1 = service.createOrder(anna)
 
     printResult(service.addItem(order1.id, laptop, 1))
     printResult(service.addItem(order1.id, book, 2))
-    printResult(service.addItem(order1.id, headphones, 0))      // ошибка: количество 0
+    printResult(service.addItem(order1.id, headphones, 0))      
     println(order1.summary())
 
-    printResult(service.pay(order1.id, WalletPayment(50000.0))) // ошибка: не хватает денег
+    printResult(service.pay(order1.id, WalletPayment(50000.0)))
     printResult(service.pay(order1.id, CardPayment("1234567812345678")))
-    printResult(service.addItem(order1.id, book, 1))            // ошибка: заказ уже оплачен
-    printResult(service.deliver(order1.id))                      // ошибка: ещё не отправлен
+    printResult(service.addItem(order1.id, book, 1))          
+    printResult(service.deliver(order1.id))                 
     printResult(service.ship(order1.id))
-    printResult(service.cancel(order1.id))                       // ошибка: уже отправлен
+    printResult(service.cancel(order1.id))                
     printResult(service.deliver(order1.id))
     println("Баллы Анны после доставки: ${anna.loyaltyPoints}")
 
-    // ---------- 4. Отмена и ошибочные операции ----------
     printTitle("4. Заказ Бориса: отмена и ошибки")
     val order2 = service.createOrder(boris)
-    printResult(service.pay(order2.id, CashPayment()))           // ошибка: заказ пуст
+    printResult(service.pay(order2.id, CashPayment()))        
     printResult(service.addItem(order2.id, headphones, 2))
     printResult(service.cancel(order2.id))
-    printResult(service.pay(order2.id, CashPayment()))           // ошибка: заказ отменён
-    printResult(service.ship(999))                                // заказа не существует
+    printResult(service.pay(order2.id, CashPayment()))         
+    printResult(service.ship(999))                            
     println(order2.summary())
 
-    // ---------- 5. Итоги ----------
     printTitle("5. Итоги")
     println("Допустимые переходы статусов:")
     for (status in OrderStatus.values()) {
