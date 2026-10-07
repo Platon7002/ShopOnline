@@ -5,8 +5,6 @@ import models.Product
 import results.OperationResult
 import users.Customer
 import users.User
-
-/** Сервис управления заказами: создаёт заказы и выполняет операции над ними. */
 class OrderService {
 
     private val orders = mutableMapOf<Int, Order>()
@@ -18,7 +16,6 @@ class OrderService {
         return order
     }
 
-    /** Находит заказ и выполняет над ним действие, либо возвращает NotFound. */
     private fun withOrder(orderId: Int, action: (Order) -> OperationResult): OperationResult {
         val order = orders[orderId] ?: return OperationResult.NotFound(orderId)
         return action(order)
@@ -39,7 +36,6 @@ class OrderService {
     fun deliver(orderId: Int): OperationResult = withOrder(orderId) { order ->
         val result = order.deliver()
         val customer = order.customer
-        // За доставленный заказ обычному и премиум-покупателю начисляются баллы
         if (result is OperationResult.Success && customer is Customer) {
             customer.addPoints((order.total / 100).toInt())
         }
